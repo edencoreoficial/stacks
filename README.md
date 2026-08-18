@@ -68,10 +68,4 @@ De uma origem fora da allowlist, a porta 443 deve recusar ou dar timeout. Portas
 
 Containers que precisam publicar porta não podem estar exclusivamente em rede `internal: true`. Docker não gera a regra de DNAT nesse caso, por isso `zabbix-server` e `zabbix-snmptraps` estão em rede dupla.
 
-## Mais detalhes
-
-Arquitetura completa: [wiki.edencore.com.br/Seguranca/Monitoramento/NOC/zabbix-grafana-opnsense](https://wiki.edencore.com.br/Seguranca/Monitoramento/NOC/zabbix-grafana-opnsense/)
-
-## Licença
-
 MIT. Use e adapte os domínios e IPs para o seu ambiente.
