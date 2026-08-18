@@ -2,7 +2,7 @@
 
 Documentação completa: [wiki.edencore.com.br/Seguranca/Monitoramento/NOC/zabbix-grafana-opnsense](https://wiki.edencore.com.br/Seguranca/Monitoramento/NOC/zabbix-grafana-opnsense/)
 
-Stack de referência para monitoramento (Zabbix 7.0 + Grafana 11.6) containerizada, sem nenhum serviço com IP público direto — todo tráfego externo passa por um firewall OPNsense antes de alcançar os containers.
+Stack de referência para monitoramento (Zabbix 7.0 + Grafana 11.6) containerizada, sem nenhum serviço com IP público direto. Todo tráfego externo passa por um firewall OPNsense antes de alcançar os containers.
 
 ## Pré-requisitos
 
@@ -67,7 +67,3 @@ De uma origem fora da allowlist, a porta 443 deve recusar ou dar timeout. Portas
 - **`dmz`**: IPs estáticos, egress restrito por nftables. Zabbix server e SNMP traps — os dois componentes que recebem dado externo não confiável.
 
 Containers que precisam publicar porta **não podem** estar exclusivamente em rede `internal: true` — Docker não gera a regra de DNAT nesse caso. Por isso `zabbix-server` e `zabbix-snmptraps` estão em rede dupla.
-
-## Licença
-
-MIT — use, adapte, adapte os domínios e IPs para o seu ambiente.
