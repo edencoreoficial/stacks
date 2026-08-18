@@ -18,4 +18,4 @@ Cada stack segue a mesma estrutura interna:
 - `.env.example` com as variáveis necessárias, nunca valores reais
 - `README.md` próprio, com pré-requisitos e passo a passo de deploy
 
-Nenhuma stack publicada aqui contém domínio, IP ou credencial real. Sempre placeholder ou variável de ambiente, para que qualquer pessoa possa clonar e adaptar ao próprio ambiente sem risco de vazamento de dado.
+Nenhuma stack publicada aqui contém domínio, IP ou credencial real. Sempre placeholder ou variável de ambiente, para que qualquer pessoa possa clonar e adaptar ao próprio ambiente.
