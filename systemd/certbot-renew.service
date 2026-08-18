@@ -1,0 +1,9 @@
+[Unit]
+Description=Renovacao certificado Let's Encrypt via DNS-01
+After=docker.service
+Requires=docker.service
+
+[Service]
+Type=oneshot
+WorkingDirectory=/opt/edencore-zabbix-grafana-opnsense
+ExecStart=/opt/edencore-zabbix-grafana-opnsense/scripts/renew-cert.sh

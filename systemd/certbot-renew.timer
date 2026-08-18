@@ -1,0 +1,9 @@
+[Unit]
+Description=Executa renovacao de certificado mensalmente
+
+[Timer]
+OnCalendar=monthly
+Persistent=true
+
+[Install]
+WantedBy=timers.target

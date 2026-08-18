@@ -1,0 +1,9 @@
+[Unit]
+Description=Atualiza set nftables de origens de gestao a cada 5min
+
+[Timer]
+OnBootSec=1min
+OnUnitActiveSec=5min
+
+[Install]
+WantedBy=timers.target

@@ -1,0 +1,4 @@
+.env
+certbot/cloudflare.ini
+certbot/conf/
+*.log
