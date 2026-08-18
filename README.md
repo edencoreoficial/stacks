@@ -1,71 +1,30 @@
-# Zabbix + Grafana atrás de OPNsense
+# EdenCore Stacks
 
-Documentação completa: [wiki.edencore.com.br/Seguranca/Monitoramento/NOC/zabbix-grafana-opnsense](https://wiki.edencore.com.br/Seguranca/Monitoramento/NOC/zabbix-grafana-opnsense/)
+Coleção de stacks de infraestrutura prontas para deploy: monitoramento, automação, serviços internos. Cada stack vive na própria subpasta, é autocontida e pode ser clonada isoladamente.
 
-Stack de referência para monitoramento (Zabbix 7.0 + Grafana 11.6) containerizada, sem nenhum serviço com IP público direto. Todo tráfego externo passa por um firewall OPNsense antes de alcançar os containers.
+Documentação técnica de cada stack fica na [wiki](https://wiki.edencore.com.br/), com link direto a partir do README de cada uma.
 
-## Pré-requisitos
+## Stacks disponíveis
 
-- VPS/VM com Docker e Docker Compose
-- OPNsense (ou equivalente) na frente, fazendo NAT de destino para a VM
-- nftables como firewall do host
-- Domínio próprio, DNS gerenciado pela Cloudflare (usado para emissão de certificado via DNS-01)
-- Token de API da Cloudflare com escopo `Zone:DNS:Edit`
+| Stack | Descrição |
+|---|---|
+| [zabbix-grafana-opnsense](./zabbix-grafana-opnsense/) | Zabbix 7.0 + Grafana 11.6 containerizados, atrás de firewall OPNsense, sem serviço com IP público direto |
 
-## Deploy
+## Convenções
 
-```bash
-git clone https://github.com/edencoreoficial/edencore-zabbix-grafana-opnsense.git /opt/edencore-zabbix-grafana-opnsense
-cd /opt/edencore-zabbix-grafana-opnsense
+Cada stack segue a mesma estrutura interna:
 
-cp .env.example .env
-nano .env   # define as senhas
+- `docker-compose.yml` na raiz da subpasta
+- `.env.example` com as variáveis necessárias, nunca valores reais
+- `README.md` próprio, com pré-requisitos e passo a passo de deploy
+- `docs/` com a documentação completa, espelhando o que está publicado na wiki
 
-cp certbot/cloudflare.ini.example certbot/cloudflare.ini
-chmod 600 certbot/cloudflare.ini
-nano certbot/cloudflare.ini   # cola o token da Cloudflare
+Nenhuma stack publicada aqui contém domínio, IP ou credencial real. Sempre placeholder ou variável de ambiente, para que qualquer pessoa possa clonar e adaptar ao próprio ambiente sem risco de vazamento de dado da EdenCore.
 
-# ajusta os domínios em nginx/conf.d/*.conf e em scripts/issue-cert.sh
-# para os seus domínios reais (por padrão usam mon.exemplo.com.br / painel.exemplo.com.br)
+## Adicionando uma nova stack
 
-cp scripts/nftables.conf /etc/nftables.conf
-# ajusta o IP em scripts/nftables.conf e scripts/update-mgmt-set.sh
-# para o IP/hostname real de gestão
-systemctl enable --now nftables.service
+Cria a subpasta com o nome da stack, segue a mesma estrutura das existentes, adiciona a linha correspondente na tabela acima.
 
-./scripts/issue-cert.sh
+## Licença
 
-docker compose up -d postgres-server
-docker compose logs -f postgres-server   # aguarda "database system is ready to accept connections"
-
-docker compose up -d
-
-cp scripts/update-mgmt-set.sh scripts/apply-docker-user-rules.sh /usr/local/sbin/
-chmod +x /usr/local/sbin/update-mgmt-set.sh /usr/local/sbin/apply-docker-user-rules.sh
-
-cp systemd/*.service systemd/*.timer /etc/systemd/system/
-systemctl daemon-reload
-systemctl enable --now nft-mgmt-set.timer
-systemctl start nft-mgmt-set.service
-systemctl enable --now certbot-renew.timer
-```
-
-## Validação
-
-```bash
-docker compose ps
-nft list chain ip filter DOCKER-USER
-curl -m3 https://mon.exemplo.com.br
-```
-
-De uma origem fora da allowlist, a porta 443 deve recusar ou dar timeout. Portas 10051/tcp e 162/udp ficam abertas para qualquer origem, é o requisito de comunicação com hosts cliente (agente Zabbix ativo e SNMP trap).
-
-## Arquitetura, em resumo
-
-- `backend`: rede Docker `internal: true`, sem rota de saída à internet. Postgres, Zabbix server/web, agentes.
-- `frontend`: única rede com saída à internet. nginx-proxy, Grafana, zabbix-web.
-- `dmz`: IPs estáticos, egress restrito por nftables. Zabbix server e SNMP traps, os dois componentes que recebem dado externo não confiável.
-
-Containers que precisam publicar porta não podem estar exclusivamente em rede `internal: true`. Docker não gera a regra de DNAT nesse caso, por isso `zabbix-server` e `zabbix-snmptraps` estão em rede dupla.
-
-Arquitetura completa: [wiki.edencore.com.br/Seguranca/Monitoramento/NOC/zabbix-grafana-opnsense](https://wiki.edencore.com.br/Seguranca/Monitoramento/NOC/zabbix-grafana-opnsense/)
+MIT. Use e adapte livremente.
