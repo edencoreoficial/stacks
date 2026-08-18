@@ -62,10 +62,10 @@ De uma origem fora da allowlist, a porta 443 deve recusar ou dar timeout. Portas
 
 ## Arquitetura, em resumo
 
-- **`backend`**: rede Docker `internal: true`, sem rota de saída à internet. Postgres, Zabbix server/web, agentes.
-- **`frontend`**: única rede com saída à internet. nginx-proxy, Grafana, zabbix-web.
-- **`dmz`**: IPs estáticos, egress restrito por nftables. Zabbix server e SNMP traps, os dois componentes que recebem dado externo não confiável.
+- `backend`: rede Docker `internal: true`, sem rota de saída à internet. Postgres, Zabbix server/web, agentes.
+- `frontend`: única rede com saída à internet. nginx-proxy, Grafana, zabbix-web.
+- `dmz`: IPs estáticos, egress restrito por nftables. Zabbix server e SNMP traps, os dois componentes que recebem dado externo não confiável.
 
 Containers que precisam publicar porta não podem estar exclusivamente em rede `internal: true`. Docker não gera a regra de DNAT nesse caso, por isso `zabbix-server` e `zabbix-snmptraps` estão em rede dupla.
 
-MIT. Use e adapte os domínios e IPs para o seu ambiente.
+Arquitetura completa: [wiki.edencore.com.br/Seguranca/Monitoramento/NOC/zabbix-grafana-opnsense](https://wiki.edencore.com.br/Seguranca/Monitoramento/NOC/zabbix-grafana-opnsense/)
