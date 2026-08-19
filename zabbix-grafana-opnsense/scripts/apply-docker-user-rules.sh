@@ -15,6 +15,8 @@ nft add rule $TABLE $CHAIN ip saddr 172.30.0.10 ct state established,related acc
 nft add rule $TABLE $CHAIN ip saddr 172.30.0.10 udp dport 53 accept
 nft add rule $TABLE $CHAIN ip saddr 172.30.0.10 tcp dport 53 accept
 nft add rule $TABLE $CHAIN ip saddr 172.30.0.10 tcp dport 443 accept
+nft add rule $TABLE $CHAIN ip saddr 172.30.0.10 udp dport 161 accept
+nft add rule $TABLE $CHAIN ip saddr 172.30.0.10 icmp type echo-request accept
 nft add rule $TABLE $CHAIN ip saddr 172.30.0.10 drop
 
 nft add rule $TABLE $CHAIN ip saddr 172.30.0.11 ct state established,related accept
